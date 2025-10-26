@@ -1,0 +1,199 @@
+{
+  "format": "BLEF",
+  "version": "0.1.0",
+  "exported_at": "2025-10-26T15:30:00Z",
+  "user": {
+    "id": "user@example.com",
+    "name": "Jane Reader",
+    "email": "user@example.com"
+  },
+  "books": [
+    {
+      "id": "9780062316097",
+      "title": "Sapiens",
+      "subtitle": "A Brief History of Humankind",
+      "authors": [
+        {
+          "name": "Yuval Noah Harari",
+          "role": "author"
+        }
+      ],
+      "identifiers": {
+        "isbn13": "9780062316097",
+        "isbn10": "0062316095",
+        "wikidata": "Q20722824",
+        "goodreads": "23692271"
+      },
+      "language": "en",
+      "description": "100,000 years ago, at least six human species inhabited the earth. Today there is just one. Us. Homo sapiens. How did our species succeed in the battle for dominance?",
+      "cover_url": "https://covers.openlibrary.org/b/isbn/9780062316097-L.jpg",
+      "edition": {
+        "publisher": "Harper",
+        "published_date": "2015-02-10",
+        "format": "paperback",
+        "pages": 443,
+        "edition_number": "1"
+      },
+      "subjects": ["History", "Anthropology", "Science"]
+    },
+    {
+      "id": "9780439139595",
+      "title": "Harry Potter and the Goblet of Fire",
+      "authors": [
+        {
+          "name": "J.K. Rowling",
+          "role": "author"
+        }
+      ],
+      "identifiers": {
+        "isbn13": "9780439139595",
+        "isbn10": "0439139597",
+        "openlibrary": "OL7929984M"
+      },
+      "language": "en",
+      "description": "Harry Potter is midway through his training as a wizard and his coming of age. Harry wants to get away from the pernicious Dursleys and go to the International Quidditch Cup.",
+      "cover_url": "https://covers.openlibrary.org/b/isbn/9780439139595-L.jpg",
+      "edition": {
+        "publisher": "Scholastic",
+        "published_date": "2002",
+        "format": "paperback",
+        "pages": 734
+      },
+      "series": {
+        "name": "Harry Potter",
+        "volume": 4
+      },
+      "subjects": ["Fantasy", "Young Adult", "Magic"]
+    },
+    {
+      "id": "9780525478812",
+      "title": "Project Hail Mary",
+      "authors": [
+        {
+          "name": "Andy Weir",
+          "role": "author"
+        }
+      ],
+      "identifiers": {
+        "isbn13": "9780525478812",
+        "goodreads": "54493401"
+      },
+      "language": "en",
+      "description": "Ryland Grace is the sole survivor on a desperate, last-chance mission—and if he fails, humanity and the earth itself will perish.",
+      "edition": {
+        "publisher": "Ballantine Books",
+        "published_date": "2021-05-04",
+        "format": "hardcover",
+        "pages": 476
+      },
+      "subjects": ["Science Fiction", "Space Opera", "Thriller"]
+    }
+  ],
+  "collections": [
+    {
+      "id": "read",
+      "name": "Read Books",
+      "type": "read",
+      "is_public": true,
+      "created_at": "2020-01-01T00:00:00Z"
+    },
+    {
+      "id": "currently-reading",
+      "name": "Currently Reading",
+      "type": "reading",
+      "is_public": true
+    },
+    {
+      "id": "to-read",
+      "name": "Want to Read",
+      "type": "to-read",
+      "is_public": true
+    },
+    {
+      "id": "favorites",
+      "name": "All-Time Favorites",
+      "type": "custom",
+      "description": "Books I absolutely loved and recommend to everyone",
+      "is_public": true
+    }
+  ],
+  "entries": [
+    {
+      "book_id": "9780062316097",
+      "collection_ids": ["read", "favorites"],
+      "user_data": {
+        "status": "read",
+        "rating": 5,
+        "review": "Absolutely mind-blowing! This book changed how I see human history and our place in the world. Harari's ability to synthesize complex ideas into accessible narratives is remarkable.",
+        "tags": ["non-fiction", "must-read", "thought-provoking"],
+        "favorite": true,
+        "read_dates": [
+          {
+            "started": "2023-06-01",
+            "finished": "2023-06-25"
+          }
+        ],
+        "added_at": "2023-05-15T10:00:00Z"
+      },
+      "ownership": {
+        "owned": true
+      }
+    },
+    {
+      "book_id": "9780439139595",
+      "collection_ids": ["read", "favorites"],
+      "user_data": {
+        "status": "read",
+        "rating": 4.5,
+        "review": "The tournament arc is fantastic! One of the best books in the series.",
+        "tags": ["fantasy", "childhood-favorite", "reread"],
+        "favorite": true,
+        "read_dates": [
+          {
+            "started": "2005-07-10",
+            "finished": "2005-07-28"
+          },
+          {
+            "started": "2024-08-01",
+            "finished": "2024-08-15"
+          }
+        ],
+        "added_at": "2024-07-20T00:00:00Z"
+      },
+      "ownership": {
+        "owned": true,
+        "loaned": {
+          "status": true,
+          "to": "Sarah Johnson",
+          "date": "2024-09-15",
+          "notes": "Lending my paperback copy"
+        }
+      }
+    },
+    {
+      "book_id": "9780525478812",
+      "collection_ids": ["currently-reading"],
+      "user_data": {
+        "status": "reading",
+        "rating": 4,
+        "private_notes": "About 60% through. The science is incredible!",
+        "tags": ["sci-fi", "space"],
+        "read_dates": [
+          {
+            "started": "2025-10-10",
+            "progress": 60
+          }
+        ],
+        "added_at": "2025-10-01T12:00:00Z"
+      },
+      "ownership": {
+        "owned": false
+      },
+      "metadata": {
+        "source": "library",
+        "due_date": "2025-11-15"
+      }
+    }
+  ]
+}
+

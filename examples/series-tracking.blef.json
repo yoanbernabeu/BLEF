@@ -1,0 +1,163 @@
+{
+  "format": "BLEF",
+  "version": "0.1.0",
+  "exported_at": "2025-10-26T16:30:00Z",
+  "books": [
+    {
+      "id": "9780765311788",
+      "title": "The Final Empire",
+      "authors": [
+        {
+          "name": "Brandon Sanderson"
+        }
+      ],
+      "identifiers": {
+        "isbn13": "9780765311788",
+        "goodreads": "68428"
+      },
+      "language": "en",
+      "series": {
+        "name": "Mistborn",
+        "volume": 1
+      },
+      "edition": {
+        "publisher": "Tor Books",
+        "published_date": "2006",
+        "format": "paperback",
+        "pages": 541
+      },
+      "subjects": ["Fantasy", "Epic Fantasy"]
+    },
+    {
+      "id": "9780765316882",
+      "title": "The Well of Ascension",
+      "authors": [
+        {
+          "name": "Brandon Sanderson"
+        }
+      ],
+      "identifiers": {
+        "isbn13": "9780765316882",
+        "goodreads": "68429"
+      },
+      "language": "en",
+      "series": {
+        "name": "Mistborn",
+        "volume": 2
+      },
+      "edition": {
+        "publisher": "Tor Books",
+        "published_date": "2007",
+        "format": "paperback",
+        "pages": 590
+      },
+      "subjects": ["Fantasy", "Epic Fantasy"]
+    },
+    {
+      "id": "9780765316899",
+      "title": "The Hero of Ages",
+      "authors": [
+        {
+          "name": "Brandon Sanderson"
+        }
+      ],
+      "identifiers": {
+        "isbn13": "9780765316899",
+        "goodreads": "2767793"
+      },
+      "language": "en",
+      "series": {
+        "name": "Mistborn",
+        "volume": 3
+      },
+      "edition": {
+        "publisher": "Tor Books",
+        "published_date": "2008",
+        "format": "paperback",
+        "pages": 572
+      },
+      "subjects": ["Fantasy", "Epic Fantasy"]
+    }
+  ],
+  "collections": [
+    {
+      "id": "read",
+      "name": "Read",
+      "type": "read"
+    },
+    {
+      "id": "currently-reading",
+      "name": "Currently Reading",
+      "type": "reading"
+    },
+    {
+      "id": "mistborn-series",
+      "name": "Mistborn Series",
+      "type": "custom",
+      "description": "Brandon Sanderson's Mistborn series - tracking my progress"
+    }
+  ],
+  "entries": [
+    {
+      "book_id": "9780765311788",
+      "collection_ids": ["read", "mistborn-series"],
+      "user_data": {
+        "status": "read",
+        "rating": 5,
+        "review": "Amazing magic system and world-building! The heist plot was incredibly satisfying.",
+        "tags": ["fantasy", "magic-system", "heist"],
+        "favorite": true,
+        "read_dates": [
+          {
+            "started": "2024-01-10",
+            "finished": "2024-01-25"
+          }
+        ],
+        "added_at": "2024-01-05T00:00:00Z"
+      },
+      "ownership": {
+        "owned": true
+      }
+    },
+    {
+      "book_id": "9780765316882",
+      "collection_ids": ["read", "mistborn-series"],
+      "user_data": {
+        "status": "read",
+        "rating": 4.5,
+        "review": "Great continuation! The political intrigue adds depth to the story.",
+        "tags": ["fantasy", "sequel", "politics"],
+        "read_dates": [
+          {
+            "started": "2024-02-01",
+            "finished": "2024-02-20"
+          }
+        ],
+        "added_at": "2024-01-26T00:00:00Z"
+      },
+      "ownership": {
+        "owned": true
+      }
+    },
+    {
+      "book_id": "9780765316899",
+      "collection_ids": ["currently-reading", "mistborn-series"],
+      "user_data": {
+        "status": "reading",
+        "tags": ["fantasy", "finale"],
+        "read_dates": [
+          {
+            "started": "2024-03-01",
+            "progress": 45
+          }
+        ],
+        "private_notes": "Loving it so far! The reveals are mind-blowing.",
+        "added_at": "2024-02-25T00:00:00Z"
+      },
+      "ownership": {
+        "owned": true
+      }
+    }
+  ]
+}
+

@@ -1,0 +1,37 @@
+{
+  "format": "BLEF",
+  "version": "0.1.0",
+  "exported_at": "2025-10-26T14:00:00Z",
+  "books": [
+    {
+      "id": "9780156013987",
+      "title": "The Little Prince",
+      "authors": [
+        {
+          "name": "Antoine de Saint-Exupéry"
+        }
+      ],
+      "identifiers": {
+        "isbn13": "9780156013987"
+      },
+      "language": "en"
+    }
+  ],
+  "collections": [
+    {
+      "id": "read",
+      "name": "Read",
+      "type": "read"
+    }
+  ],
+  "entries": [
+    {
+      "book_id": "9780156013987",
+      "collection_ids": ["read"],
+      "user_data": {
+        "status": "read"
+      }
+    }
+  ]
+}
+

@@ -1,0 +1,405 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://blef-format.org/schema/v0.1.0/blef.json",
+  "title": "BLEF - Book Library Exchange Format",
+  "description": "An open, interoperable format for exchanging personal book library data",
+  "type": "object",
+  "required": ["format", "version", "exported_at", "books", "collections", "entries"],
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "BLEF",
+      "description": "Format identifier, must be 'BLEF'"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "BLEF version using semantic versioning (e.g., 0.1.0)"
+    },
+    "exported_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of export"
+    },
+    "user": {
+      "type": "object",
+      "description": "Optional information about the library owner",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "User identifier (email, username, UUID)"
+        },
+        "name": {
+          "type": "string",
+          "description": "User display name"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Additional user metadata"
+        }
+      }
+    },
+    "books": {
+      "type": "array",
+      "description": "List of unique books in the library",
+      "minItems": 0,
+      "items": {
+        "$ref": "#/$defs/book"
+      }
+    },
+    "collections": {
+      "type": "array",
+      "description": "List of shelves/collections",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/collection"
+      }
+    },
+    "entries": {
+      "type": "array",
+      "description": "User-specific data linking books to collections",
+      "minItems": 0,
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "$defs": {
+    "book": {
+      "type": "object",
+      "required": ["id", "title", "authors", "identifiers"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Primary identifier: ISBN13 or UUIDv4",
+          "oneOf": [
+            {
+              "pattern": "^97[89]\\d{10}$",
+              "description": "ISBN13 format"
+            },
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+              "description": "UUIDv4 format"
+            }
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Book title"
+        },
+        "subtitle": {
+          "type": "string",
+          "description": "Book subtitle (optional)"
+        },
+        "authors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/author"
+          },
+          "description": "List of authors"
+        },
+        "identifiers": {
+          "type": "object",
+          "description": "Various book identifiers",
+          "properties": {
+            "isbn13": {
+              "type": "string",
+              "pattern": "^97[89]\\d{10}$"
+            },
+            "isbn10": {
+              "type": "string",
+              "pattern": "^\\d{9}[\\dX]$"
+            },
+            "asin": {
+              "type": "string"
+            },
+            "openlibrary": {
+              "type": "string",
+              "description": "OpenLibrary ID (e.g., OL123456M)"
+            },
+            "wikidata": {
+              "type": "string",
+              "pattern": "^Q\\d+$",
+              "description": "Wikidata QID"
+            },
+            "goodreads": {
+              "type": "string"
+            },
+            "other": {
+              "type": "object",
+              "description": "Other custom identifiers"
+            }
+          }
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+          "description": "ISO 639-1 language code (e.g., en, fr, en-US)"
+        },
+        "description": {
+          "type": "string",
+          "description": "Book description or synopsis"
+        },
+        "cover_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to cover image"
+        },
+        "edition": {
+          "type": "object",
+          "description": "Edition details",
+          "properties": {
+            "publisher": {
+              "type": "string"
+            },
+            "published_date": {
+              "type": "string",
+              "description": "ISO date or year"
+            },
+            "format": {
+              "type": "string",
+              "enum": ["hardcover", "paperback", "ebook", "audiobook", "other"],
+              "description": "Book format"
+            },
+            "pages": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "edition_number": {
+              "type": "string"
+            }
+          }
+        },
+        "series": {
+          "type": "object",
+          "description": "Series information",
+          "required": ["name"],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Series name"
+            },
+            "volume": {
+              "type": ["number", "string"],
+              "description": "Volume number in series"
+            }
+          }
+        },
+        "subjects": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Book subjects/genres"
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Additional custom metadata"
+        }
+      }
+    },
+    "author": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Author name"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["author", "editor", "translator", "illustrator", "contributor"],
+          "default": "author",
+          "description": "Author role"
+        },
+        "identifiers": {
+          "type": "object",
+          "description": "Author identifiers",
+          "properties": {
+            "wikidata": {
+              "type": "string",
+              "pattern": "^Q\\d+$"
+            },
+            "viaf": {
+              "type": "string"
+            },
+            "isni": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "collection": {
+      "type": "object",
+      "required": ["id", "name", "type"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unique collection identifier"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Display name"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["read", "reading", "to-read", "wishlist", "owned", "custom"],
+          "description": "Collection type"
+        },
+        "description": {
+          "type": "string",
+          "description": "Collection description"
+        },
+        "is_public": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether the collection is public"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "metadata": {
+          "type": "object"
+        }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "required": ["book_id", "collection_ids", "user_data"],
+      "properties": {
+        "book_id": {
+          "type": "string",
+          "description": "Reference to book.id"
+        },
+        "collection_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "Collections this book belongs to"
+        },
+        "user_data": {
+          "type": "object",
+          "required": ["status"],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": ["read", "reading", "to-read", "abandoned", "wishlist"],
+              "description": "Reading status (exactly one per entry)"
+            },
+            "rating": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 5,
+              "description": "User rating (0-5)"
+            },
+            "review": {
+              "type": "string",
+              "description": "User review/notes"
+            },
+            "private_notes": {
+              "type": "string",
+              "description": "Private notes (not for export)"
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "User tags"
+            },
+            "favorite": {
+              "type": "boolean",
+              "default": false
+            },
+            "read_dates": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/readDate"
+              },
+              "description": "Reading history (can be read multiple times)"
+            },
+            "added_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When the book was added to library"
+            }
+          }
+        },
+        "ownership": {
+          "type": "object",
+          "description": "Ownership and lending information",
+          "properties": {
+            "owned": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether user owns this book"
+            },
+            "loaned": {
+              "type": "object",
+              "description": "Loan status",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "description": "Currently loaned out"
+                },
+                "to": {
+                  "type": "string",
+                  "description": "Person who borrowed it"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Loan date"
+                },
+                "notes": {
+                  "type": "string"
+                }
+              },
+              "required": ["status"]
+            }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Additional custom entry metadata"
+        }
+      }
+    },
+    "readDate": {
+      "type": "object",
+      "properties": {
+        "started": {
+          "type": "string",
+          "format": "date",
+          "description": "Start date (YYYY-MM-DD)"
+        },
+        "finished": {
+          "type": "string",
+          "format": "date",
+          "description": "Finish date (YYYY-MM-DD)"
+        },
+        "progress": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Reading progress percentage"
+        }
+      }
+    }
+  }
+}
+

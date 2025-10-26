@@ -1,0 +1,154 @@
+{
+  "format": "BLEF",
+  "version": "0.1.0",
+  "exported_at": "2025-10-26T16:00:00Z",
+  "user": {
+    "name": "Pierre Dupont"
+  },
+  "books": [
+    {
+      "id": "9782070612758",
+      "title": "Le Petit Prince",
+      "authors": [
+        {
+          "name": "Antoine de Saint-Exupéry"
+        }
+      ],
+      "identifiers": {
+        "isbn13": "9782070612758",
+        "wikidata": "Q25338"
+      },
+      "language": "fr",
+      "description": "Le récit des aventures d'un petit garçon venu d'une autre planète.",
+      "edition": {
+        "publisher": "Gallimard",
+        "published_date": "2007",
+        "format": "paperback",
+        "pages": 96
+      },
+      "subjects": ["Classique", "Philosophie", "Jeunesse"]
+    },
+    {
+      "id": "9782253087236",
+      "title": "Le Comte de Monte-Cristo",
+      "authors": [
+        {
+          "name": "Alexandre Dumas"
+        }
+      ],
+      "identifiers": {
+        "isbn13": "9782253087236",
+        "wikidata": "Q211736"
+      },
+      "language": "fr",
+      "description": "L'histoire d'Edmond Dantès, injustement emprisonné, qui s'évade et se venge de ceux qui l'ont trahi.",
+      "edition": {
+        "publisher": "Le Livre de Poche",
+        "published_date": "1998",
+        "format": "paperback",
+        "pages": 1504
+      },
+      "subjects": ["Classique", "Aventure", "Vengeance"]
+    },
+    {
+      "id": "9782072762093",
+      "title": "L'Étranger",
+      "authors": [
+        {
+          "name": "Albert Camus"
+        }
+      ],
+      "identifiers": {
+        "isbn13": "9782072762093",
+        "wikidata": "Q217337"
+      },
+      "language": "fr",
+      "description": "L'histoire de Meursault, un homme ordinaire qui commet un meurtre absurde.",
+      "edition": {
+        "publisher": "Gallimard",
+        "published_date": "2017",
+        "format": "paperback",
+        "pages": 192
+      },
+      "subjects": ["Philosophie", "Existentialisme", "Classique"]
+    }
+  ],
+  "collections": [
+    {
+      "id": "lus",
+      "name": "Livres lus",
+      "type": "read"
+    },
+    {
+      "id": "a-lire",
+      "name": "À lire",
+      "type": "to-read"
+    },
+    {
+      "id": "classiques-francais",
+      "name": "Classiques français",
+      "type": "custom",
+      "description": "Ma collection de classiques de la littérature française"
+    }
+  ],
+  "entries": [
+    {
+      "book_id": "9782070612758",
+      "collection_ids": ["lus", "classiques-francais"],
+      "user_data": {
+        "status": "read",
+        "rating": 5,
+        "review": "Un chef-d'œuvre intemporel. Chaque relecture apporte de nouvelles réflexions.",
+        "tags": ["favori", "poétique", "profond"],
+        "favorite": true,
+        "read_dates": [
+          {
+            "started": "2015-03-10",
+            "finished": "2015-03-15"
+          },
+          {
+            "started": "2023-12-01",
+            "finished": "2023-12-03"
+          }
+        ],
+        "added_at": "2015-03-01T00:00:00Z"
+      },
+      "ownership": {
+        "owned": true
+      }
+    },
+    {
+      "book_id": "9782253087236",
+      "collection_ids": ["lus", "classiques-francais"],
+      "user_data": {
+        "status": "read",
+        "rating": 4.5,
+        "review": "Une épopée captivante ! Un peu long par moments mais l'intrigue est brillante.",
+        "tags": ["aventure", "vengeance", "épique"],
+        "read_dates": [
+          {
+            "started": "2022-07-01",
+            "finished": "2022-08-20"
+          }
+        ],
+        "added_at": "2022-06-15T00:00:00Z"
+      },
+      "ownership": {
+        "owned": true
+      }
+    },
+    {
+      "book_id": "9782072762093",
+      "collection_ids": ["a-lire", "classiques-francais"],
+      "user_data": {
+        "status": "to-read",
+        "tags": ["philosophie", "existentialisme"],
+        "added_at": "2025-10-01T00:00:00Z"
+      },
+      "ownership": {
+        "owned": false
+      }
+    }
+  ]
+}
+

@@ -194,7 +194,7 @@ func (m *Mapper) ConvertToBLEF() (*blef.BLEFDocument, error) {
 			for collID, coll := range collections {
 				existing := doc.GetCollectionByID(collID)
 				if existing == nil {
-					doc.AddCollection(*coll)
+					_ = doc.AddCollection(*coll)
 				}
 			}
 
@@ -206,7 +206,7 @@ func (m *Mapper) ConvertToBLEF() (*blef.BLEFDocument, error) {
 
 	// Ensure at least one collection exists
 	if len(doc.Collections) == 0 {
-		doc.AddCollection(blef.Collection{
+		_ = doc.AddCollection(blef.Collection{
 			ID:       "default",
 			Name:     "My Library",
 			Type:     "custom",
@@ -277,8 +277,9 @@ func (m *Mapper) buildBook(row []string, rowIdx int) *blef.Book {
 
 		if pagesStr := m.getValue(row, m.Mapping.Pages); pagesStr != "" {
 			var pages int
-			fmt.Sscanf(pagesStr, "%d", &pages)
-			edition.Pages = pages
+			if _, err := fmt.Sscanf(pagesStr, "%d", &pages); err == nil {
+				edition.Pages = pages
+			}
 		}
 
 		book.Edition = edition

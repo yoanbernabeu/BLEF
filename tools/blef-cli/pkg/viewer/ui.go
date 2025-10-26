@@ -23,7 +23,6 @@ type Model struct {
 	doc          *blef.BLEFDocument
 	mode         viewMode
 	selectedIdx  int
-	filterText   string
 	filteredData []interface{}
 	detailData   interface{}
 	width        int

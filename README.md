@@ -65,16 +65,26 @@ BLEF solves this by providing a **vendor-neutral**, **human-readable** format th
 ### For Users
 
 1. **Export** your library from your current platform (CSV/API)
-2. **Convert** to BLEF format using available tools
-3. **Import** into any BLEF-compatible application
-4. **Keep** your data portable and future-proof
+2. **Convert** to BLEF format using the [CLI tool](./tools/blef-cli/)
+   ```bash
+   blef-cli convert goodreads_export.csv -o my-library.blef.json
+   ```
+3. **Validate** your BLEF file
+   ```bash
+   blef-cli validate my-library.blef.json
+   ```
+4. **View** your library interactively
+   ```bash
+   blef-cli view my-library.blef.json
+   ```
 
 ### For Developers
 
 1. Read the [specification](./docs/SPECIFICATION.md)
 2. Implement import/export in your application
 3. Validate files against the [JSON Schema](./schema/blef-schema-v0.1.0.json)
-4. Share your implementation with the community
+4. Use the [CLI tool](./tools/blef-cli/) for testing
+5. Share your implementation with the community
 
 ## 📚 Documentation
 
@@ -95,10 +105,23 @@ BLEF solves this by providing a **vendor-neutral**, **human-readable** format th
 
 ## 🛠️ Tools & Implementations
 
-### Official Tools (Coming Soon)
-- BLEF Validator (CLI)
-- CSV to BLEF converter
-- BLEF to CSV exporter
+### Official Tools
+
+#### BLEF CLI
+
+Complete command-line tool for working with BLEF files:
+
+**Quick Install (macOS/Linux):**
+```bash
+curl -fsSL https://raw.githubusercontent.com/yoanbernabeu/BLEF/main/tools/blef-cli/install.sh | bash
+```
+
+**Features:**
+- ✅ Validator (JSON schema + integrity checks)
+- ✅ CSV to BLEF converter (Goodreads, Babelio, custom)
+- ✅ Interactive TUI viewer
+
+**[Full Documentation →](./tools/blef-cli/)**
 
 ### Community Implementations
 *Submit your implementation via PR!*

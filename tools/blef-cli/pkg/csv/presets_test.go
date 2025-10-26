@@ -89,3 +89,25 @@ func TestMapRating(t *testing.T) {
 		}
 	}
 }
+
+func TestCleanGoodreadsValue(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{`=""9791028107819""`, "9791028107819"},
+		{`="2367935947"`, "2367935947"},
+		{`=""`, ""},
+		{"9780123456789", "9780123456789"},
+		{"", ""},
+		{`  =""9780123456789""  `, "9780123456789"},
+		{"normal value", "normal value"},
+	}
+
+	for _, tt := range tests {
+		result := CleanGoodreadsValue(tt.input)
+		if result != tt.expected {
+			t.Errorf("CleanGoodreadsValue(%q) = %q, want %q", tt.input, result, tt.expected)
+		}
+	}
+}

@@ -224,22 +224,32 @@ func (m *Mapper) buildBook(row []string, rowIdx int) *blef.Book {
 		return nil // Skip rows without title
 	}
 
-	// Determine book ID
+	// Get ISBN values and clean them if Goodreads format
+	isbn13 := m.getValue(row, m.Mapping.ISBN13)
+	isbn10 := m.getValue(row, m.Mapping.ISBN10)
+
+	if m.Preset != nil && m.Preset.Name == "goodreads" {
+		isbn13 = CleanGoodreadsValue(isbn13)
+		isbn10 = CleanGoodreadsValue(isbn10)
+	}
+
+	// Determine book ID - prioritize ISBN13, then generate UUID
+	// Note: ISBN-10 is NOT valid as book ID in BLEF (only ISBN-13 or UUID)
 	bookID := m.getValue(row, m.Mapping.BookID)
 	if bookID == "" {
-		bookID = m.getValue(row, m.Mapping.ISBN13)
+		bookID = isbn13
 	}
 	if bookID == "" {
-		// Generate UUID
+		// Generate UUID if no ISBN-13 available (even if we have ISBN-10)
 		bookID = uuid.New().String()
 	}
 
 	// Build identifiers
 	identifiers := blef.Identifiers{}
-	if isbn13 := m.getValue(row, m.Mapping.ISBN13); isbn13 != "" {
+	if isbn13 != "" {
 		identifiers.ISBN13 = isbn13
 	}
-	if isbn10 := m.getValue(row, m.Mapping.ISBN10); isbn10 != "" {
+	if isbn10 != "" {
 		identifiers.ISBN10 = isbn10
 	}
 

@@ -38,7 +38,7 @@ var (
 		Name:        "goodreads",
 		Description: "Goodreads library export",
 		Mapping: ColumnMapping{
-			BookID:        "Book Id",
+			// Don't map BookID - let the code use ISBN13 as ID
 			ISBN13:        "ISBN13",
 			ISBN10:        "ISBN",
 			Title:         "Title",
@@ -161,6 +161,23 @@ func normalizeStatus(value string) string {
 
 	// Default
 	return "to-read"
+}
+
+// CleanGoodreadsValue removes Excel formulas from Goodreads exports
+// Converts ="value" or =""value"" to value
+func CleanGoodreadsValue(value string) string {
+	value = strings.TrimSpace(value)
+
+	// Remove Excel formula wrapper: ="..." -> ...
+	if strings.HasPrefix(value, `="`) && strings.HasSuffix(value, `"`) {
+		value = strings.TrimPrefix(value, `="`)
+		value = strings.TrimSuffix(value, `"`)
+
+		// Remove internal double quotes: ""123"" -> 123
+		value = strings.Trim(value, `"`)
+	}
+
+	return strings.TrimSpace(value)
 }
 
 // MapRating converts rating strings to float64

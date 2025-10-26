@@ -91,5 +91,4 @@ jobs:
         with:
           version: latest
           working-directory: tools/blef-cli
-          args: --timeout=5m
 

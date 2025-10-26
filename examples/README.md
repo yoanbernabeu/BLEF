@@ -176,5 +176,5 @@ See [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines.
 
 ---
 
-*Need help? Check the [full specification](../blef_specification.md) or [open an issue](https://github.com/yoanbernabeu/BLEF/issues).*
+*Need help? Check the [full specification](../docs/SPECIFICATION.md) or [open an issue](https://github.com/yoanbernabeu/BLEF/issues).*
 

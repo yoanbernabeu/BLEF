@@ -247,7 +247,7 @@ See [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines.
 
 ### BLEF Resources
 
-- [BLEF Specification](../blef_specification.md)
+- [BLEF Specification](../docs/SPECIFICATION.md)
 - [Example Files](../examples/)
 - [Contributing Guide](../CONTRIBUTING.md)
 

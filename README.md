@@ -71,14 +71,14 @@ BLEF solves this by providing a **vendor-neutral**, **human-readable** format th
 
 ### For Developers
 
-1. Read the [specification](./blef_specification.md)
+1. Read the [specification](./docs/SPECIFICATION.md)
 2. Implement import/export in your application
 3. Validate files against the [JSON Schema](./schema/blef-schema-v0.1.0.json)
 4. Share your implementation with the community
 
 ## 📚 Documentation
 
-- **[Full Specification](./blef_specification.md)** — Complete format documentation
+- **[Full Specification](./docs/SPECIFICATION.md)** — Complete format documentation
 - **[JSON Schema](./schema/blef-schema-v0.1.0.json)** — Validation schema
 - **[Examples](./examples/)** — Sample BLEF files
 - **[Converters](./tools/)** — Import/export tools (coming soon)

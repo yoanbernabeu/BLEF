@@ -68,7 +68,7 @@ Share your implementations via PR or discussion!
 
 If you're adding BLEF support to your application:
 
-1. Follow the [specification](./blef_specification.md)
+1. Follow the [specification](./docs/SPECIFICATION.md)
 2. Validate against the [JSON Schema](./schema/blef-schema-v0.1.0.json)
 3. Test with the provided examples
 4. Share your implementation for community feedback

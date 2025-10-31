@@ -1,6 +1,8 @@
 module github.com/yoanbernabeu/BLEF/tools/blef-cli
 
-go 1.21
+go 1.24.0
+
+toolchain go1.24.9
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
@@ -33,8 +35,8 @@ require (
 	github.com/stretchr/testify v1.8.4 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
-	golang.org/x/sync v0.5.0 // indirect
+	golang.org/x/sync v0.17.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect
 	golang.org/x/term v0.6.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/text v0.30.0 // indirect
 )

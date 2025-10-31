@@ -14,20 +14,20 @@ import (
 type Mapper struct {
 	Data    *CSVData
 	Mapping ColumnMapping
-	Preset  *Preset
+	Format  CSVFormat
 }
 
 // NewMapper creates a new CSV to BLEF mapper
-func NewMapper(data *CSVData, preset *Preset) *Mapper {
+func NewMapper(data *CSVData, format CSVFormat) *Mapper {
 	mapping := ColumnMapping{}
-	if preset != nil {
-		mapping = preset.Mapping
+	if format != nil {
+		mapping = format.GetImportMapping()
 	}
 
 	return &Mapper{
 		Data:    data,
 		Mapping: mapping,
-		Preset:  preset,
+		Format:  format,
 	}
 }
 
@@ -224,13 +224,13 @@ func (m *Mapper) buildBook(row []string, rowIdx int) *blef.Book {
 		return nil // Skip rows without title
 	}
 
-	// Get ISBN values and clean them if Goodreads format
+	// Get ISBN values and clean them using format-specific cleaning
 	isbn13 := m.getValue(row, m.Mapping.ISBN13)
 	isbn10 := m.getValue(row, m.Mapping.ISBN10)
 
-	if m.Preset != nil && m.Preset.Name == "goodreads" {
-		isbn13 = CleanGoodreadsValue(isbn13)
-		isbn10 = CleanGoodreadsValue(isbn10)
+	if m.Format != nil {
+		isbn13 = m.Format.CleanValue(isbn13)
+		isbn10 = m.Format.CleanValue(isbn10)
 	}
 
 	// Determine book ID - prioritize ISBN13, then generate UUID
@@ -302,7 +302,12 @@ func (m *Mapper) buildBook(row []string, rowIdx int) *blef.Book {
 func (m *Mapper) buildEntry(row []string, bookID string, collections *map[string]*blef.Collection) *blef.Entry {
 	// Determine status
 	statusStr := m.getValue(row, m.Mapping.Status)
-	status := MapStatus(statusStr, m.Preset)
+	status := "to-read" // default
+	if m.Format != nil {
+		status = m.Format.MapStatus(statusStr)
+	} else {
+		status = normalizeStatus(statusStr)
+	}
 
 	// Determine collection
 	shelf := m.getValue(row, m.Mapping.Shelf)
@@ -335,7 +340,11 @@ func (m *Mapper) buildEntry(row []string, bookID string, collections *map[string
 	}
 
 	if ratingStr := m.getValue(row, m.Mapping.Rating); ratingStr != "" {
-		userData.Rating = MapRating(ratingStr)
+		if m.Format != nil {
+			userData.Rating = m.Format.MapRating(ratingStr)
+		} else {
+			userData.Rating = parseRating(ratingStr)
+		}
 	}
 
 	if review := m.getValue(row, m.Mapping.Review); review != "" {
@@ -392,4 +401,53 @@ func parseDate(dateStr string) (time.Time, error) {
 	}
 
 	return time.Time{}, fmt.Errorf("unable to parse date: %s", dateStr)
+}
+
+// normalizeStatus attempts to normalize any status string
+func normalizeStatus(value string) string {
+	value = strings.TrimSpace(strings.ToLower(value))
+
+	// Common mappings
+	if strings.Contains(value, "read") && !strings.Contains(value, "reading") {
+		return "read"
+	}
+	if strings.Contains(value, "reading") || strings.Contains(value, "current") {
+		return "reading"
+	}
+	if strings.Contains(value, "to") && strings.Contains(value, "read") {
+		return "to-read"
+	}
+	if strings.Contains(value, "abandon") {
+		return "abandoned"
+	}
+	if strings.Contains(value, "wish") {
+		return "wishlist"
+	}
+
+	// Default
+	return "to-read"
+}
+
+// parseRating converts rating strings to float64
+func parseRating(value string) float64 {
+	value = strings.TrimSpace(value)
+	if value == "" || value == "0" {
+		return 0
+	}
+
+	var rating float64
+	if _, err := fmt.Sscanf(value, "%f", &rating); err == nil {
+		if rating > 5 {
+			rating = rating / 2 // Convert 10-point scale to 5-point
+		}
+		if rating < 0 {
+			rating = 0
+		}
+		if rating > 5 {
+			rating = 5
+		}
+		return rating
+	}
+
+	return 0
 }

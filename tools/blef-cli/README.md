@@ -6,7 +6,9 @@ A command-line tool for working with BLEF (Book Library Exchange Format) files.
 
 - **Validate** BLEF files against the JSON schema
 - **Convert** CSV files from Goodreads, Babelio, and other platforms to BLEF format
+- **Export** BLEF files back to CSV format (Goodreads, Babelio)
 - **View** BLEF files in an interactive terminal UI
+- **Extensible** architecture using Go interfaces for easy addition of new CSV formats
 
 ## Installation
 
@@ -130,6 +132,31 @@ Map column 'ISBN' to:
   ...
 ```
 
+### Export
+
+Export BLEF files back to CSV format:
+
+```bash
+# Export to Goodreads format
+blef-cli export my-library.blef.json -f goodreads
+
+# Export to Babelio format
+blef-cli export my-library.blef.json -f babelio
+
+# Specify output file
+blef-cli export my-library.blef.json -f goodreads -o goodreads_import.csv
+```
+
+Supported export formats:
+- **Goodreads** - CSV with Excel formulas (compatible with Goodreads import)
+- **Babelio** - French format CSV
+
+Flags:
+- `-f, --format` - Export format (required)
+- `-o, --output` - Output CSV file path (default: input-format.csv)
+
+The exported CSV files are ready to import back into the respective platforms, maintaining all your ratings, reviews, and reading status! 🔄
+
 ### View
 
 Launch an interactive terminal viewer:
@@ -208,6 +235,23 @@ blef-cli convert custom_books.csv
 # Follow the prompts to map your columns
 ```
 
+### Complete Import/Export Cycle
+
+```bash
+# 1. Import from Goodreads
+blef-cli convert goodreads_export.csv -o my-library.blef.json
+
+# 2. View and verify
+blef-cli view my-library.blef.json
+
+# 3. Export to another platform (e.g., Babelio)
+blef-cli export my-library.blef.json -f babelio
+
+# Result: You can now import babelio_export.csv into Babelio!
+```
+
+This allows you to **migrate your reading data between platforms** seamlessly! 🚀
+
 ## Development
 
 ### Build
@@ -233,6 +277,38 @@ make install
 ```bash
 make clean
 ```
+
+## Extensibility
+
+The CLI uses an **interface-based architecture** that makes adding new CSV formats incredibly simple.
+
+### Adding a New CSV Format
+
+To add support for a new platform's CSV export:
+
+1. **Create a new format file** implementing the `CSVFormat` interface
+2. **Register it** in the default registry
+3. **Done!** Your format is automatically available
+
+See [pkg/csv/README.md](pkg/csv/README.md) for a complete guide with examples.
+
+**Example**: Adding support for LibraryThing exports
+
+```go
+// librarything_format.go
+type LibraryThingFormat struct{}
+
+func (f *LibraryThingFormat) Name() string { return "librarything" }
+func (f *LibraryThingFormat) Description() string { return "LibraryThing export" }
+func (f *LibraryThingFormat) Detect(data *CSVData) bool { /* detection logic */ }
+// ... implement other interface methods
+```
+
+Built-in formats:
+- **Goodreads**: Handles Excel formula formatting (`=""value""`)
+- **Babelio**: French reading platform support
+
+Want to add support for your favorite platform? See the [contribution guide](pkg/csv/README.md) for step-by-step instructions!
 
 ## Dependencies
 

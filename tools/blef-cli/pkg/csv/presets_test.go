@@ -2,72 +2,123 @@ package csv
 
 import "testing"
 
-func TestDetectPreset(t *testing.T) {
-	// Goodreads format
+func TestGoodreadsFormatDetect(t *testing.T) {
 	goodreadsData := &CSVData{
 		Headers: []string{"Book Id", "Title", "Author", "ISBN13", "My Rating"},
 	}
 
-	preset := DetectPreset(goodreadsData)
-	if preset == nil {
-		t.Error("DetectPreset should detect Goodreads format")
-	} else if preset.Name != "goodreads" {
-		t.Errorf("Expected 'goodreads', got '%s'", preset.Name)
+	format := &GoodreadsFormat{}
+	if !format.Detect(goodreadsData) {
+		t.Error("GoodreadsFormat should detect Goodreads CSV")
 	}
 
-	// Babelio format
-	babelioData := &CSVData{
-		Headers: []string{"EAN", "Titre", "Auteur", "Étagère"},
-	}
-
-	preset = DetectPreset(babelioData)
-	if preset == nil {
-		t.Error("DetectPreset should detect Babelio format")
-	} else if preset.Name != "babelio" {
-		t.Errorf("Expected 'babelio', got '%s'", preset.Name)
-	}
-
-	// Unknown format
-	unknownData := &CSVData{
+	invalidData := &CSVData{
 		Headers: []string{"Unknown", "Columns"},
 	}
-
-	preset = DetectPreset(unknownData)
-	if preset != nil {
-		t.Error("DetectPreset should return nil for unknown format")
+	if format.Detect(invalidData) {
+		t.Error("GoodreadsFormat should not detect invalid CSV")
 	}
 }
 
-func TestMapStatus(t *testing.T) {
+func TestBabelioFormatDetect(t *testing.T) {
+	// Real Babelio export format
+	babelioData := &CSVData{
+		Headers: []string{"ISBN", "Titre", "Auteur", "Statut"},
+	}
+
+	format := &BabelioFormat{}
+	if !format.Detect(babelioData) {
+		t.Error("BabelioFormat should detect Babelio CSV")
+	}
+
+	invalidData := &CSVData{
+		Headers: []string{"Unknown", "Columns"},
+	}
+	if format.Detect(invalidData) {
+		t.Error("BabelioFormat should not detect invalid CSV")
+	}
+}
+
+func TestFormatRegistry(t *testing.T) {
+	registry := NewFormatRegistry()
+
+	goodreads := &GoodreadsFormat{}
+	babelio := &BabelioFormat{}
+
+	registry.Register(goodreads)
+	registry.Register(babelio)
+
+	// Test GetByName
+	found := registry.GetByName("goodreads")
+	if found == nil {
+		t.Error("Should find goodreads format")
+	}
+	if found.Name() != "goodreads" {
+		t.Errorf("Expected 'goodreads', got '%s'", found.Name())
+	}
+
+	// Test DetectFormat
+	goodreadsData := &CSVData{
+		Headers: []string{"Book Id", "Title", "Author", "ISBN13", "My Rating"},
+	}
+	detected := registry.DetectFormat(goodreadsData)
+	if detected == nil {
+		t.Error("Should detect goodreads format")
+	}
+	if detected.Name() != "goodreads" {
+		t.Errorf("Expected 'goodreads', got '%s'", detected.Name())
+	}
+
+	// Test GetAll
+	all := registry.GetAll()
+	if len(all) != 2 {
+		t.Errorf("Expected 2 formats, got %d", len(all))
+	}
+}
+
+func TestGoodreadsMapStatus(t *testing.T) {
+	format := &GoodreadsFormat{}
 	tests := []struct {
 		input    string
-		preset   *Preset
 		expected string
 	}{
-		{"read", &GoodreadsPreset, "read"},
-		{"currently-reading", &GoodreadsPreset, "reading"},
-		{"to-read", &GoodreadsPreset, "to-read"},
-		{"lu", &BabelioPreset, "read"},
-		{"en cours", &BabelioPreset, "reading"},
-		{"à lire", &BabelioPreset, "to-read"},
-		{"abandonné", &BabelioPreset, "abandoned"},
-		{"read", nil, "read"},
-		{"reading now", nil, "reading"},
+		{"read", "read"},
+		{"currently-reading", "reading"},
+		{"to-read", "to-read"},
+		{"unknown", "to-read"},
 	}
 
 	for _, tt := range tests {
-		result := MapStatus(tt.input, tt.preset)
+		result := format.MapStatus(tt.input)
 		if result != tt.expected {
-			presetName := "nil"
-			if tt.preset != nil {
-				presetName = tt.preset.Name
-			}
-			t.Errorf("MapStatus(%s, %s) = %s, want %s", tt.input, presetName, result, tt.expected)
+			t.Errorf("MapStatus(%s) = %s, want %s", tt.input, result, tt.expected)
 		}
 	}
 }
 
-func TestMapRating(t *testing.T) {
+func TestBabelioMapStatus(t *testing.T) {
+	format := &BabelioFormat{}
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{"lu", "read"},
+		{"en cours", "reading"},
+		{"à lire", "to-read"},
+		{"abandonné", "abandoned"},
+		{"unknown", "to-read"},
+	}
+
+	for _, tt := range tests {
+		result := format.MapStatus(tt.input)
+		if result != tt.expected {
+			t.Errorf("MapStatus(%s) = %s, want %s", tt.input, result, tt.expected)
+		}
+	}
+}
+
+func TestGoodreadsMapRating(t *testing.T) {
+	format := &GoodreadsFormat{}
 	tests := []struct {
 		input    string
 		expected float64
@@ -76,21 +127,20 @@ func TestMapRating(t *testing.T) {
 		{"4.5", 4.5},
 		{"0", 0.0},
 		{"", 0.0},
-		{"10", 5.0}, // 10-point scale converted to 5
-		{"8", 4.0},  // 8/2 = 4
-		{"-1", 0.0}, // Negative clamped to 0
+		{"-1", 0.0},
 		{"invalid", 0.0},
 	}
 
 	for _, tt := range tests {
-		result := MapRating(tt.input)
+		result := format.MapRating(tt.input)
 		if result != tt.expected {
 			t.Errorf("MapRating(%s) = %.1f, want %.1f", tt.input, result, tt.expected)
 		}
 	}
 }
 
-func TestCleanGoodreadsValue(t *testing.T) {
+func TestGoodreadsCleanValue(t *testing.T) {
+	format := &GoodreadsFormat{}
 	tests := []struct {
 		input    string
 		expected string
@@ -105,9 +155,32 @@ func TestCleanGoodreadsValue(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		result := CleanGoodreadsValue(tt.input)
+		result := format.CleanValue(tt.input)
 		if result != tt.expected {
-			t.Errorf("CleanGoodreadsValue(%q) = %q, want %q", tt.input, result, tt.expected)
+			t.Errorf("CleanValue(%q) = %q, want %q", tt.input, result, tt.expected)
 		}
+	}
+}
+
+func TestDefaultRegistry(t *testing.T) {
+	// Test that DefaultRegistry is initialized with built-in formats
+	if DefaultRegistry == nil {
+		t.Fatal("DefaultRegistry should not be nil")
+	}
+
+	formats := DefaultRegistry.GetAll()
+	if len(formats) < 2 {
+		t.Errorf("DefaultRegistry should have at least 2 formats, got %d", len(formats))
+	}
+
+	// Check that goodreads and babelio are registered
+	goodreads := DefaultRegistry.GetByName("goodreads")
+	if goodreads == nil {
+		t.Error("DefaultRegistry should have goodreads format")
+	}
+
+	babelio := DefaultRegistry.GetByName("babelio")
+	if babelio == nil {
+		t.Error("DefaultRegistry should have babelio format")
 	}
 }

@@ -69,22 +69,30 @@ func runConvert(cmd *cobra.Command, args []string) {
 	}
 	fmt.Printf("✅ Found %d rows with %d columns\n\n", len(data.Rows), len(data.Headers))
 
-	// Detect or select preset
-	var preset *csv.Preset
+	// Detect or select format
+	var format csv.CSVFormat
 	if formatName != "" {
 		// User specified format
-		preset = findPreset(formatName)
-		if preset == nil {
+		format = csv.DefaultRegistry.GetByName(strings.ToLower(formatName))
+		if format == nil {
 			fmt.Fprintf(os.Stderr, "❌ Unknown format: %s\n", formatName)
+			fmt.Fprintf(os.Stderr, "Available formats: ")
+			for i, f := range csv.DefaultRegistry.GetAll() {
+				if i > 0 {
+					fmt.Fprintf(os.Stderr, ", ")
+				}
+				fmt.Fprintf(os.Stderr, "%s", f.Name())
+			}
+			fmt.Fprintf(os.Stderr, "\n")
 			os.Exit(1)
 		}
-		fmt.Printf("🎯 Using format: %s\n\n", preset.Description)
+		fmt.Printf("🎯 Using format: %s\n\n", format.Description())
 	} else {
 		// Auto-detect
 		fmt.Println("🔍 Detecting CSV format...")
-		preset = csv.DetectPreset(data)
-		if preset != nil {
-			fmt.Printf("✅ Detected format: %s\n", preset.Description)
+		format = csv.DefaultRegistry.DetectFormat(data)
+		if format != nil {
+			fmt.Printf("✅ Detected format: %s\n", format.Description())
 			fmt.Println("")
 		} else {
 			fmt.Println("⚠️  Could not auto-detect format")
@@ -93,10 +101,10 @@ func runConvert(cmd *cobra.Command, args []string) {
 	}
 
 	// Create mapper
-	mapper := csv.NewMapper(data, preset)
+	mapper := csv.NewMapper(data, format)
 
-	// If no preset or manual mapping requested, do interactive mapping
-	if preset == nil {
+	// If no format or manual mapping requested, do interactive mapping
+	if format == nil {
 		fmt.Println("📋 Starting interactive column mapping...")
 		if err := mapper.InteractiveMapping(); err != nil {
 			fmt.Fprintf(os.Stderr, "❌ Mapping error: %v\n", err)
@@ -147,14 +155,4 @@ func runConvert(cmd *cobra.Command, args []string) {
 
 	fmt.Println("✅ Conversion complete!")
 	fmt.Printf("\nYou can now validate your file with:\n  blef-cli validate %s\n", outputFile)
-}
-
-func findPreset(name string) *csv.Preset {
-	name = strings.ToLower(name)
-	for _, preset := range csv.AllPresets {
-		if strings.ToLower(preset.Name) == name {
-			return &preset
-		}
-	}
-	return nil
 }

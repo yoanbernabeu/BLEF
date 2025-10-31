@@ -3,6 +3,7 @@ package blef
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"time"
 )
 
@@ -86,6 +87,15 @@ func FromJSON(data []byte) (*BLEFDocument, error) {
 		return nil, fmt.Errorf("failed to parse BLEF document: %w", err)
 	}
 	return &doc, nil
+}
+
+// LoadFromFile loads a BLEF document from a file
+func LoadFromFile(filename string) (*BLEFDocument, error) {
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read file: %w", err)
+	}
+	return FromJSON(data)
 }
 
 // GetBookByID retrieves a book by its ID
